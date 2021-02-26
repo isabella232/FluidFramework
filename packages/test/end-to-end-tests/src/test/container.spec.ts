@@ -24,13 +24,14 @@ import { getDataStoreFactory, createRuntimeFactory, TestDataObject } from "./com
 const id = "fluid-test://localhost/containerTest";
 const testRequest: IRequest = { url: id };
 
-describe("Container", () => {
+describe("Container asdf", () => {
     let driver: ITestDriver;
     let logger: ITelemetryBufferedLogger;
     const loaderContainerTracker = new LoaderContainerTracker();
     before(function() {
         driver = getFluidTestDriver() as unknown as ITestDriver;
         logger = getTestLogger();
+        logger.send({ category: "generic", eventName: "Testing123" });
 
         // TODO: Convert these to mocked unit test. These are all API tests and doesn't
         // need the service.  For new disable the tests other than local driver
@@ -42,6 +43,7 @@ describe("Container", () => {
         loaderContainerTracker.reset();
     });
     async function loadContainer(props?: Partial<ILoaderProps>) {
+        logger.send({ category: "generic", eventName: "CreatTestContainer" });
         const loader =  new Loader({
             ...props,
             logger,
