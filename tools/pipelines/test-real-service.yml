@@ -124,8 +124,35 @@ jobs:
         customRegistry: 'useNpmrc'
 
     # end-to-end tests routerlicious
+    - task: Npm@1
+      displayName: '[end-to-end tests] npm run test:realsvc:routerlicious:report'
+      continueOnError: true
+      timeoutInMinutes: 15
+      env:
+        fluid__webpack__bearerSecret: $(fluid-webpack-bearerSecret)
+        fluid__webpack__fluidHost: $(fluid-webpack-fluidHost)
+        fluid__webpack__tenantId: $(fluid-webpack-tenantId)
+        fluid__webpack__tenantSecret: $(fluid-webpack-tenantSecret)
+        FLUID_TEST_LOGGER_PKG_PATH: ${{ variables.diDir }}/node_modules/@ff-internal/aria-logger # Contains getTestLogger impl to inject
+      inputs:
+        command: 'custom'
+        workingDir: packages/test/end-to-end-tests
+        customCommand: 'run test:realsvc:routerlicious:report'
 
     # end-to-end tests odsp
+    - task: Npm@1
+      displayName: '[end-to-end tests] npm run test:realsvc:odsp:report'
+      continueOnError: true
+      timeoutInMinutes: 15
+      env:
+        login__microsoft__clientId: $(login-microsoft-clientId)
+        login__microsoft__secret: $(login-microsoft-secret)
+        login__odsp__test__accounts: $(login-odsp-test-accounts)
+        FLUID_TEST_LOGGER_PKG_PATH: ${{ variables.diDir }}/node_modules/@ff-internal/aria-logger # Contains getTestLogger impl to inject
+      inputs:
+        command: 'custom'
+        workingDir: packages/test/end-to-end-tests
+        customCommand: 'run test:realsvc:odsp:report -- -- -- --grep Container'
 
     # Run Stress Tests
     - task: Npm@1
@@ -136,6 +163,7 @@ jobs:
         login__microsoft__clientId: $(login-microsoft-clientId)
         login__microsoft__secret: $(login-microsoft-secret)
         login__odsp__test__accounts: $(login-odsp-test-accounts)
+        FLUID_TEST_LOGGER_PKG_PATH: ${{ variables.diDir }}/node_modules/@ff-internal/aria-logger # Contains getTestLogger impl to inject
       inputs:
         command: 'custom'
         workingDir: packages/test/service-load-test
